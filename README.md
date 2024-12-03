@@ -10,3 +10,8 @@ If not, this error will happen:
 ```
  You must address the points described in the following [1] lines before starting Elasticsearch. For more information see [https://www.elastic.co/guide/en/elasticsearch/reference/8.16/bootstrap-checks.html]\nbootstrap check failure [1] of [1]: max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]; for more information see [https://www.elastic.co/guide/en/elasticsearch/reference/8.16/bootstrap-checks-max-map-count.html
 ```
+
+Mount volumn to persist data
+1000:1000 is default UID:GID of Elasticsearch container
+sudo chown -R 1000:1000 ./docker-data/esdata
+sudo chmod -R 775 ./docker-data/esdata
