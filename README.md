@@ -12,6 +12,8 @@ If not, this error will happen:
 ```
 
 Mount volumn to persist data
-1000:1000 is default UID:GID of Elasticsearch container
-sudo chown -R 1000:1000 ./docker-data/esdata
-sudo chmod -R 775 ./docker-data/esdata
+  1000:1000 is default UID:GID of Elasticsearch container
+  
+`sudo chown -R 1000:1000 ./docker-data/esdata`
+
+`sudo chmod -R 775 ./docker-data/esdata`
