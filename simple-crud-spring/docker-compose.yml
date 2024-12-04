@@ -52,6 +52,26 @@ services:
     env_file: .env
     networks:
       - elastic
+  
+  logstash:
+    image: docker.elastic.co/logstash/logstash:${ELASTIC_VERSION}
+    container_name: logstash
+    user: root
+    ports:
+      - 5044:5044 # Logstash TCP input
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./docker-data/logstash-data:/usr/share/logstash/data
+    environment:
+      - NODE_NAME="logstash"
+      - xpack.monitoring.enabled=false
+      - ELASTIC_USER=elastic
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_HOSTS=http://elasticsearch:9200
+    command: logstash -f /usr/share/logstash/pipeline/logstash.conf
+    env_file: .env
+    networks:
+      - elastic
 
 networks:
   elastic:
