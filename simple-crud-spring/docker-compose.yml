@@ -29,11 +29,11 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
-        reservations:
           memory: 1G
+        reservations:
+          memory: 500M
     volumes:
-      - ./docker-data/esdata:/usr/share/elasticsearch/data
+      - esdata:/usr/share/elasticsearch/data
     networks:
       - elastic
     env_file: .env
@@ -50,18 +50,23 @@ services:
     depends_on:
       - elasticsearch
     env_file: .env
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
     networks:
       - elastic
   
   logstash:
     image: docker.elastic.co/logstash/logstash:${ELASTIC_VERSION}
     container_name: logstash
-    user: root
     ports:
       - 5044:5044 # Logstash TCP input
     volumes:
       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-      - ./docker-data/logstash-data:/usr/share/logstash/data
+      - logstash-data:/usr/share/logstash/data
     environment:
       - NODE_NAME="logstash"
       - xpack.monitoring.enabled=false
@@ -69,6 +74,12 @@ services:
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - ELASTIC_HOSTS=http://elasticsearch:9200
     command: logstash -f /usr/share/logstash/pipeline/logstash.conf
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 500M
     env_file: .env
     networks:
       - elastic
@@ -77,3 +88,10 @@ networks:
   elastic:
     driver: bridge
     name: elastic
+
+volumes:
+  esdata:
+    driver: local
+  
+  logstash-data:
+    driver: local
